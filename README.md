@@ -45,7 +45,44 @@ Build-args available
 
 # Usage
 
-## Using docker-compose (recommended) <br>
+## Quick Start (Recommended) 🚀
+
+Deploy the entire Squid + Psiphon system with just 1 command:
+
+```bash
+# Setup with custom username/password and auto-start
+./setup.sh -u admin -p MySecurePass123 -s
+
+# Setup with random credentials (more secure)
+./setup.sh -s
+
+# Setup without confirmation
+./setup.sh -u myuser -p mypass -s -y
+
+# Setup with different region and custom port
+./setup.sh -u admin -p admin123 -d US -e JP -P 8888 -s -y
+```
+
+**Options:**
+- `-u, --username`: Username for proxy (default: random)
+- `-p, --password`: Password for proxy (default: random)
+- `-P, --port`: Port for Squid (default: 3128)
+- `-d, --device-region`: Device region (default: IN)
+- `-e, --egress-region`: Egress region (default: SG)
+- `-s, --start`: Auto-start after setup
+- `-y, --yes`: Skip confirmation
+- `-h, --help`: Show help
+
+**After setup:**
+- Credentials are saved in `.proxy_credentials`
+- Test: `curl -x http://username:password@localhost:3128 http://ipinfo.io`
+- View logs: `docker-compose logs -f`
+
+---
+
+## Manual Setup
+
+### Using docker-compose <br>
 ```yaml
 version: "3.5"
 services:
@@ -101,3 +138,4 @@ You can check the health status of the container using the following command:
 ```bash
 docker inspect --format='{{json .State.Health}}' psiphon
 ```
+

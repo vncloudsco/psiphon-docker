@@ -1,0 +1,40 @@
+version: "3.5"
+
+services:
+  psiphon:
+    image: swarupsengupta2007/psiphon:latest
+    container_name: psiphon
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - HTTP_PORT=8080
+      - SOCKS_PORT=1080
+      - DEVICE_REGION=IN
+      - EGRESS_REGION=SG
+    volumes:
+      - ./psiphon/config:/config
+    # Không expose ports ra internet, chỉ cho squid truy cập internal
+    networks:
+      - proxy-network
+    restart: unless-stopped
+
+  squid:
+    image: ubuntu/squid:latest
+    container_name: squid
+    ports:
+      - "3128:3128"  # Port để client kết nối từ bên ngoài
+    volumes:
+      - ./squid/squid.conf:/etc/squid/squid.conf:ro
+      - ./squid/passwords:/etc/squid/passwords:ro
+      - ./squid/cache:/var/spool/squid
+      - ./squid/logs:/var/log/squid
+    depends_on:
+      - psiphon
+    networks:
+      - proxy-network
+    restart: unless-stopped
+
+networks:
+  proxy-network:
+    driver: bridge
+    internal: false  # Cho phép squid ra internet thông qua psiphon

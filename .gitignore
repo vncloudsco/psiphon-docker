@@ -1,0 +1,19 @@
+# Log files
+*.log
+squid/logs/
+
+# Environment files
+.env
+.env.local
+# Sensitive credentials
+passwords
+squid/passwords
+.proxy_credentials
+
+# Docker volumes
+squid/cache/
+psiphon/config/
+
+# Backup files
+*.backup
+docker-compose.yaml.backup
